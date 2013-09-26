@@ -6,11 +6,11 @@ require 'webpagetest/version'
 Gem::Specification.new do |spec|
   spec.name          = "webpagetest"
   spec.version       = Webpagetest::VERSION
-  spec.authors       = ["sivicencio"]
+  spec.authors       = ["Sebastián Vicencio"]
   spec.email         = ["sivicencio@gmail.com"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
-  spec.homepage      = ""
+  spec.description   = %q{A Ruby wrapper for the Webpagetest REST API.}
+  spec.summary       = %q{Ruby wrapper for the Webpagetest API}
+  spec.homepage      = "https://github.com/sivicencio/webpagetest-ruby"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
@@ -21,4 +21,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec"
+  spec.add_dependency "faraday"
+  spec.add_dependency "json"
 end

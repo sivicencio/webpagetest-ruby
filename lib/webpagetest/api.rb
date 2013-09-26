@@ -1,11 +1,19 @@
+require 'webpagetest/connection'
+
 module Webpagetest
-  class API
-    def self.test_api(param)
-      if param.downcase == "broccoli"
-        "Gross!"
-      else
-        "Delicious!"
-      end
+  class Client
+
+    attr_accessor :params
+
+    # Main params for running tests
+    def initialize(params = {})
+      params.fetch(:k)
+      params[:f] ||= :json
+      self.params = params
     end
+
+    private
+
+    include Connection
   end
 end

@@ -1,6 +1,9 @@
 require "webpagetest/version"
-require 'webpagetest/api'
+require 'webpagetest/error'
+require 'webpagetest/client'
 
 module Webpagetest
-  # Your code goes here...
+  def self.new(params)
+    Webpagetest::Client.new(params)
+  end
 end

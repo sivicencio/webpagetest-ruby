@@ -1,11 +1,9 @@
 require 'webpagetest'
 
-describe Webpagetest::API do
-  it "broccoli is gross" do
-    Webpagetest::API.test_api("Broccoli").should eql("Gross!")
-  end
+describe Webpagetest do
+  let(:key){ "d88f58f6bb8c44ab9622a346bc93342d" }
 
-  it "anything else is delicious" do
-    Webpagetest::API.test_api("Not Broccoli").should eql("Delicious!")
+  it 'should establish a connection with required params' do
+    wpt = Webpagetest.new(k: :key)
   end
 end
