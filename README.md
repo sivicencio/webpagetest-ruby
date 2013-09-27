@@ -1,4 +1,4 @@
-# Webpagetest
+# Webpagetest Ruby Wrapper
 
 This gem is a Ruby wrapper for the main features of [Webpagetest](http://www.webpagetest.org/) REST API.
 Features included so far:
@@ -7,7 +7,7 @@ Features included so far:
 - Get available test locations
 
 This gem is inspired by [Susuwatari](https://github.com/moviepilot/susuwatari) gem, so several ideas were taken from there. There were two main reasons to create a new `Webpagetest` gem:
-- Susuwatari uses [Rest client](https://github.com/rest-client/rest-client) to make HTTP requests, but this gem uses [Faraday](https://github.com/lostisland/faraday) instead, since it's more flexible in terms of HTTP connection.
+- Susuwatari uses [Rest client](https://github.com/rest-client/rest-client) to make HTTP requests, but this gem uses [Faraday](https://github.com/lostisland/faraday) instead, since it's more flexible and extensible in terms of HTTP connection.
 - Susuwatari `Client` class is focused on test runs, but no general-purpose wrapper has been built so far (for example, locations were missing).
 
 ## Installation
@@ -25,7 +25,7 @@ Or install it yourself as:
     $ gem install webpagetest
 
 ## Usage
-All you require to use the gem is a Webpagetest API key in order to run tests. You can ask your own emailing Patrick Meenan, like he explains in [Webpagetest docs](https://sites.google.com/a/webpagetest.org/docs/advanced-features/webpagetest-restful-apis).
+All you require to use the gem is a Webpagetest API key in order to run tests. You can ask your own by emailing Patrick Meenan, like he explains in [Webpagetest docs](https://sites.google.com/a/webpagetest.org/docs/advanced-features/webpagetest-restful-apis).
 
 Basically, you need to instantiate an object of `Webpagetest` class, and then use it to interact with the API.
 
