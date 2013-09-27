@@ -1,6 +1,14 @@
 # Webpagetest
 
-TODO: Write a gem description
+This gem is a Ruby wrapper for the main features of [Webpagetest](http://www.webpagetest.org/) REST API.
+Features included so far:
+- Run tests with all [specified](https://sites.google.com/a/webpagetest.org/docs/advanced-features/webpagetest-restful-apis#TOC-Parameters) parameters of the API.
+- Check test status
+- Get available test locations
+
+This gem is inspired by [Susuwatari](https://github.com/moviepilot/susuwatari) gem, so several ideas were taken from there. There were two main reasons to create a new `Webpagetest` gem:
+- Susuwatari uses [Rest client](https://github.com/rest-client/rest-client) to make HTTP requests, but this gem uses [Faraday](https://github.com/lostisland/faraday) instead, since it's more flexible in terms of HTTP connection.
+- Susuwatari `Client` class is focused on test runs, but no general-purpose wrapper has been built so far (for example, locations were missing).
 
 ## Installation
 
@@ -17,13 +25,20 @@ Or install it yourself as:
     $ gem install webpagetest
 
 ## Usage
+All you require to use the gem is a Webpagetest API key in order to run tests. You can ask your own emailing Patrick Meenan, like he explains in [Webpagetest docs](https://sites.google.com/a/webpagetest.org/docs/advanced-features/webpagetest-restful-apis).
 
-TODO: Write usage instructions here
+Basically, you need to instantiate an object of `Webpagetest` class, and then use it to interact with the API.
 
-## Contributing
+```ruby
+require 'webpagetest'
 
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+wpt = Webpagetest.new(k: your_api_key)
+
+locations = wpt.locations
+
+```
+
+## Contribution
+This gem is just a starting point wrapper, so much work can be done from here.
+
+Any contribution is appreciated. Just fork this repository and submit the appropriate pull request if you want to add features to this gem.

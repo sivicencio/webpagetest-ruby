@@ -1,3 +1,4 @@
+require 'hashie'
 require "webpagetest/version"
 require 'webpagetest/error'
 require 'webpagetest/client'

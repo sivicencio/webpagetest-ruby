@@ -6,18 +6,16 @@ module Webpagetest
 
     ENDPOINT = 'http://www.webpagetest.org/'
 
-    private
-
-    def connection(options = nil)
-      options = {
+    def get_connection(options = nil)
+      options = Hashie::Mash.new( {
         request: :url_encoded,
         response: :logger,
         adapter: Faraday.default_adapter,        
-      } unless options.present?
+      } ) if options.nil?
 
       connection = Faraday.new(url: ENDPOINT) do |faraday|
-        faraday.request  options.url_encoded
-        faraday.response options.logger
+        faraday.request  options.request
+        faraday.response options.response
         faraday.adapter  options.adapter
       end
     end

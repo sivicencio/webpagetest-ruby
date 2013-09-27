@@ -7,10 +7,17 @@ module Webpagetest
 
     # Main params for running tests
     def initialize(params = {})
+      # Use Hashie::Mash instead of Hash object
+      params = Hashie::Mash.new(params)
       required_params params      
-      params[:f] ||= :json
+      params.f ||= :json
+      params.options ||= nil
       self.params = params
-      self.connection = connection
+      self.connection = get_connection params.options
+    end
+
+    def key
+      self.params.k
     end
 
     def run
@@ -24,7 +31,7 @@ module Webpagetest
     include Connection
 
     def required_params(params)
-      raise_error("An API key must be specified using :k variable name") if not params.has_key?(:k)
+      raise_error("An API key must be specified using :k variable name") if not params.key?(:k)
     end
 
     def raise_error(msg)
