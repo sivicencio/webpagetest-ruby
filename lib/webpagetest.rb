@@ -1,4 +1,6 @@
 require 'hashie'
+require 'json'
+require 'faraday'
 require "webpagetest/version"
 require 'webpagetest/error'
 require 'webpagetest/client'

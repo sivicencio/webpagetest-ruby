@@ -1,5 +1,3 @@
-require 'faraday'
-
 module Webpagetest
   # Configures and performs connection requests
   module Connection
