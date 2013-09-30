@@ -3,6 +3,7 @@ require 'json'
 require 'faraday'
 require "webpagetest/version"
 require 'webpagetest/error'
+require 'webpagetest/response'
 require 'webpagetest/client'
 
 module Webpagetest

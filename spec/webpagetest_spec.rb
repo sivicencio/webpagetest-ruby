@@ -6,5 +6,13 @@ describe Webpagetest do
   it 'should establish a connection with required params' do
     wpt = Webpagetest.new(k: :key)
     wpt.connection.should_not be_nil
+    wpt.connection.should be_instance_of Faraday::Connection
+  end
+
+  it 'should get available locations' do
+    wpt = Webpagetest.new(k: :key)
+    locations = wpt.locations
+    locations.should be_instance_of Hashie::Mash 
+    locations.values.first.Label.should_not be_nil
   end
 end

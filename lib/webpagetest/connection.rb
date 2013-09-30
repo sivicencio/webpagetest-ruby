@@ -10,8 +10,10 @@ module Webpagetest
         response: :logger,
         adapter: Faraday.default_adapter,        
       } ) if options.nil?
+      
+      url = options.url || ENDPOINT
 
-      connection = Faraday.new(url: ENDPOINT) do |faraday|
+      connection = Faraday.new(url: url) do |faraday|
         faraday.request  options.request
         faraday.response options.response
         faraday.adapter  options.adapter

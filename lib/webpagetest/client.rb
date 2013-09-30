@@ -3,8 +3,9 @@ require 'webpagetest/connection'
 module Webpagetest
   class Client
 
-    attr_accessor :params, :connection
+    attr_accessor :params, :connection, :response
 
+    TEST_BASE = 'runtest.php'
     LOCATIONS_BASE = 'getLocations.php'
 
     # Main params for running tests
@@ -22,7 +23,11 @@ module Webpagetest
       params.k
     end
 
-    def run
+    def run_test
+      response = Response.new
+    end
+
+    def status
     end
 
     def locations
@@ -30,8 +35,10 @@ module Webpagetest
         req.url '/' + LOCATIONS_BASE
         req.params['f'] = params.f
       end
-      response_body = Hashie::Mash.new(JSON.parse(response.body))
-      return response_body.data
+      response_body = JSON.parse(response.body)
+      response_body = Hashie::Mash.new(response_body)
+      return not_available (response_body) if response_body.statusCode != 200
+      locations = response_body.data
     end
 
     private
@@ -40,6 +47,13 @@ module Webpagetest
 
     def required_params(params)
       raise_error("An API key must be specified using :k variable name") if not params.key?(:k)
+    end
+
+    def not_available(response)
+      Hashie::Mash.new( {
+        status_code: response.statusCode,
+        status_text: 'Service not available'
+      } )
     end
 
     def raise_error(msg)
