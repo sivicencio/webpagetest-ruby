@@ -11,6 +11,7 @@ describe Webpagetest do
 
   it 'should get available locations' do
     wpt = Webpagetest.new(k: :key)
+    locations_request
     locations = wpt.locations
     locations.should be_instance_of Hashie::Mash 
     locations.values.first.Label.should_not be_nil

@@ -3,7 +3,7 @@ require 'webpagetest/connection'
 module Webpagetest
   class Client
 
-    attr_accessor :params, :connection, :response
+    attr_reader :params, :connection, :response
 
     TEST_BASE = 'runtest.php'
     LOCATIONS_BASE = 'getLocations.php'
@@ -15,8 +15,8 @@ module Webpagetest
       required_params params      
       params.f ||= :json
       params.options ||= nil
-      self.params = params
-      self.connection = get_connection params.options
+      @params = params
+      @connection = get_connection params.options
     end
 
     def key
@@ -24,7 +24,23 @@ module Webpagetest
     end
 
     def run_test
-      response = Response.new
+      # Make sure that params have been set
+      raise_error('You need to pass some params to run the test. At least, an url or script') unless block_given?
+      params = Hashie::Mash.new
+      yield params
+      raise_error('No params were passed to run_test method') if params.empty?
+
+      response = connection.get do |req|
+        req.url "#{TEST_BASE}"
+        req.params['k'] = key
+        req.params['f'] = @params.f
+        params.each do |k, v|
+          req.params[k] = v
+        end
+      end
+      return not_available (response) unless response.status == 200
+      response_body = Hashie::Mash.new(JSON.parse(response.body))
+      #@response = Response.new(response)
     end
 
     def status
@@ -32,12 +48,11 @@ module Webpagetest
 
     def locations
       response = connection.get do |req|
-        req.url '/' + LOCATIONS_BASE
+        req.url "#{LOCATIONS_BASE}"
         req.params['f'] = params.f
       end
-      response_body = JSON.parse(response.body)
-      response_body = Hashie::Mash.new(response_body)
-      return not_available (response_body) if response_body.statusCode != 200
+      return not_available (response) unless response.status == 200
+      response_body = Hashie::Mash.new(JSON.parse(response.body))     
       locations = response_body.data
     end
 
@@ -51,7 +66,7 @@ module Webpagetest
 
     def not_available(response)
       Hashie::Mash.new( {
-        status_code: response.statusCode,
+        status_code: response.status,
         status_text: 'Service not available'
       } )
     end
