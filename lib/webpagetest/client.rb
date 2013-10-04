@@ -46,8 +46,9 @@ module Webpagetest
 
     # Gets the result of a test based on its id
     def test_result(test_id)
-      test_params = Hashie::Mash.new( {f: params.f, test: test_id, pagespeed: 1} )
+      test_params = Hashie::Mash.new( {test: test_id, pagespeed: 1} )
       response = make_request(RESULT_BASE, test_params)
+      return not_available (response) unless response.status == 200
       @response = Response.new(Hashie::Mash.new(JSON.parse(response.body)), false)
     end
 
@@ -55,6 +56,7 @@ module Webpagetest
     def locations
       locations_params = Hashie::Mash.new( {f: params.f} )
       response = make_request(LOCATIONS_BASE, locations_params)
+      return not_available (response) unless response.status == 200
       response_body = Hashie::Mash.new(JSON.parse(response.body))  
       response_body.data
     end
@@ -71,7 +73,6 @@ module Webpagetest
           req.params[k] = v
         end        
       end
-      return not_available (response) unless response.status == 200
       response
     end
 

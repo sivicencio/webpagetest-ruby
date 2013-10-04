@@ -44,12 +44,11 @@ module Webpagetest
       end
     end
 
-    # Makes the request to get the test result (code from Susuwatari gem)
+    # Makes the request to get the test result
     def fetch_result
       connection = get_connection
       response = connection.get do |req|
         req.url RESULT_BASE
-        req.params['f'] = :json
         req.params['test'] = test_id
         req.params['pagespeed'] = 1
       end
