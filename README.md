@@ -6,7 +6,7 @@ Features included so far:
 - Check test status
 - Get available test locations
 
-This gem is inspired by [Susuwatari](https://github.com/moviepilot/susuwatari) gem, so several ideas were taken from there. There were two main reasons to create a new `Webpagetest` gem:
+This gem is inspired by [Susuwatari](https://github.com/moviepilot/susuwatari) gem, so several ideas were taken from there (it's like a rewrite with some modifications). There were two main reasons to create a new `Webpagetest` gem:
 - Susuwatari uses [Rest client](https://github.com/rest-client/rest-client) to make HTTP requests, but this gem uses [Faraday](https://github.com/lostisland/faraday) instead, since it's more flexible and extensible in terms of HTTP connection.
 - Susuwatari `Client` class is focused on test runs, but no general-purpose wrapper has been built so far (for example, locations were missing).
 
@@ -34,8 +34,15 @@ require 'webpagetest'
 
 wpt = Webpagetest.new(k: your_api_key)
 
-locations = wpt.locations
+# Run test
 
+# Get test result
+test = wpt.test_result("some_test_id")
+
+
+# Locations
+locations = wpt.locations
+locations.keys.values # => ["Dulles_IE6", "Dulles_IE7", "Sydney:Chrome", "Sydney:Firefox", ...]
 ```
 
 ## Contribution

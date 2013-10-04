@@ -7,10 +7,10 @@ module Webpagetest
 
     TEST_BASE = 'runtest.php'
     LOCATIONS_BASE = 'getLocations.php'
+    RESULT_BASE = 'jsonResult.php'
 
     # Main params for running tests
     def initialize(params = {})
-      # Use Hashie::Mash instead of Hash object
       params = Hashie::Mash.new(params)
       required_params params      
       params.f ||= :json
@@ -19,10 +19,12 @@ module Webpagetest
       @connection = get_connection params.options
     end
 
+    # Alias method for API key
     def key
       params.k
     end
 
+    # Runs a test bases on provided parameters
     def run_test
       # Make sure that params have been set
       raise_error('You need to pass some params to run the test. At least, an url or script') unless block_given?
@@ -30,7 +32,7 @@ module Webpagetest
       yield params
       raise_error('No params were passed to run_test method') if params.empty?
 
-      response = connection.get do |req|
+      response = connection.post do |req|
         req.url "#{TEST_BASE}"
         req.params['k'] = key
         req.params['f'] = @params.f
@@ -39,31 +41,46 @@ module Webpagetest
         end
       end
       return not_available (response) unless response.status == 200
-      response_body = Hashie::Mash.new(JSON.parse(response.body))
-      #@response = Response.new(response)
+      @response = Response.new(Hashie::Mash.new(JSON.parse(response.body)))
     end
 
-    def status
+    # Gets the result of a test based on its id
+    def test_result(test_id)
+      test_params = Hashie::Mash.new( {f: params.f, test: test_id, pagespeed: 1} )
+      response = make_request(RESULT_BASE, test_params)
+      @response = Response.new(Hashie::Mash.new(JSON.parse(response.body)), false)
     end
 
+    # Gets all available test locations
     def locations
-      response = connection.get do |req|
-        req.url "#{LOCATIONS_BASE}"
-        req.params['f'] = params.f
-      end
-      return not_available (response) unless response.status == 200
-      response_body = Hashie::Mash.new(JSON.parse(response.body))     
-      locations = response_body.data
+      locations_params = Hashie::Mash.new( {f: params.f} )
+      response = make_request(LOCATIONS_BASE, locations_params)
+      response_body = Hashie::Mash.new(JSON.parse(response.body))  
+      response_body.data
     end
 
     private
 
     include Connection
 
+    # Makes a simple request with params
+    def make_request(url, params)
+      response = connection.get do |req|
+        req.url url
+        params.each do |k, v|
+          req.params[k] = v
+        end        
+      end
+      return not_available (response) unless response.status == 200
+      response
+    end
+
+    # Check required parameters to initialize Webpagetest
     def required_params(params)
       raise_error("An API key must be specified using :k variable name") if not params.key?(:k)
     end
 
+    # Returns a hashie hash with no available information
     def not_available(response)
       Hashie::Mash.new( {
         status_code: response.status,
@@ -71,8 +88,10 @@ module Webpagetest
       } )
     end
 
+    # Wrapper for raising errors with custom messages
     def raise_error(msg)
       raise Error.new(msg)
-    end   
+    end
+
   end
 end
