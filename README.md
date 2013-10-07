@@ -86,8 +86,6 @@ response.result.keys
 ]
 
 response.result.runs[1].firstView.loadTime # => 2051
-
-
 ```
 
 ### Get test result
