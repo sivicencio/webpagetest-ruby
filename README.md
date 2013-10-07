@@ -104,7 +104,7 @@ response.result.average.firstView.domElements # => 714
 ### Locations
 ```ruby
 locations = wpt.locations
-locations.keys.values
+locations.keys
 [
     [  0] "Dulles_IE6",
     [  1] "Dulles_IE10",
