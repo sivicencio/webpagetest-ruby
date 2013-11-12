@@ -12,7 +12,7 @@ module Webpagetest
     # Main params for running tests
     def initialize(params = {})
       params = Hashie::Mash.new(params)
-      required_params params      
+      required_params params
       params.f ||= :json
       params.options ||= nil
       @params = params
@@ -41,7 +41,7 @@ module Webpagetest
         end
       end
       return not_available (response) unless response.status == 200
-      @response = Response.new(Hashie::Mash.new(JSON.parse(response.body)))
+      @response = Response.new(self, Hashie::Mash.new(JSON.parse(response.body)))
     end
 
     # Gets the result of a test based on its id
@@ -49,7 +49,7 @@ module Webpagetest
       test_params = Hashie::Mash.new( {test: test_id, pagespeed: 1} )
       response = make_request(RESULT_BASE, test_params)
       return not_available (response) unless response.status == 200
-      @response = Response.new(Hashie::Mash.new(JSON.parse(response.body)), false)
+      @response = Response.new(self, Hashie::Mash.new(JSON.parse(response.body)), false)
     end
 
     # Gets all available test locations
@@ -57,7 +57,7 @@ module Webpagetest
       locations_params = Hashie::Mash.new( {f: params.f} )
       response = make_request(LOCATIONS_BASE, locations_params)
       return not_available (response) unless response.status == 200
-      response_body = Hashie::Mash.new(JSON.parse(response.body))  
+      response_body = Hashie::Mash.new(JSON.parse(response.body))
       response_body.data
     end
 
@@ -71,7 +71,7 @@ module Webpagetest
         req.url url
         params.each do |k, v|
           req.params[k] = v
-        end        
+        end
       end
       response
     end

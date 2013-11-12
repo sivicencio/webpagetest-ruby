@@ -4,12 +4,13 @@ module Webpagetest
   # Custom response class for Webpagetest test data
   class Response
 
-    attr_reader :test_id, :status, :result, :raw
+    attr_reader :client, :test_id, :status, :result, :raw
 
     STATUS_BASE = 'testStatus.php'
     RESULT_BASE = 'jsonResult.php'
 
-    def initialize(raw_response, running=true)
+    def initialize(client, raw_response, running=true)
+      @client = client
       @raw = raw_response
       @test_id = !running && raw_response.statusCode == 200 ? raw.data.id : raw.data.testId
     end
@@ -24,7 +25,7 @@ module Webpagetest
 
     # Makes the request to get the status of the test
     def fetch_status
-      connection = get_connection
+      connection = @client.connection
       response = connection.get do |req|
         req.url STATUS_BASE
         req.params['f'] = :json
@@ -46,7 +47,7 @@ module Webpagetest
 
     # Makes the request to get the test result
     def fetch_result
-      connection = get_connection
+      connection = @client.connection
       response = connection.get do |req|
         req.url RESULT_BASE
         req.params['test'] = test_id
