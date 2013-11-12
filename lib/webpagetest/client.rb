@@ -78,7 +78,9 @@ module Webpagetest
 
     # Check required parameters to initialize Webpagetest
     def required_params(params)
-      raise_error("An API key must be specified using :k variable name") if not params.key?(:k)
+      if params.options.nil? || params.options.url.nil? || params.options.url == Connection::ENDPOINT
+        raise_error("An API key must be specified using :k variable name") if not params.key?(:k)
+      end
     end
 
     # Returns a hashie hash with no available information
