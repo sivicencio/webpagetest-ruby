@@ -41,7 +41,7 @@ module Webpagetest
         @status = :completed
         fetch_result
       when /4../
-        @current_status = :error
+        @status = :error
       end
     end
 
