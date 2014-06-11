@@ -12,7 +12,20 @@ module Webpagetest
     def initialize(client, raw_response, running=true)
       @client = client
       @raw = raw_response
-      @test_id = !running && raw_response.statusCode == 200 ? raw.data.id : raw.data.testId
+      # ap raw_response
+      if !running && raw_response.statusCode == 200
+        @test_id = raw.data.id
+      elsif raw.data
+        @test_id = raw.data.testId
+      else
+        # An error occurred, for example:
+        # {
+        #   "statusCode" => 400,
+        #   "statusText" => "Invalid Location, please try submitting your test request again."
+        # }
+        @test_id = nil
+        # When @test_id is nil, calling `get_status` will set @status to :error.
+      end
     end
 
     # Gets the status of the request (code from Susuwatari gem)
