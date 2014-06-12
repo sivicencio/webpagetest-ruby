@@ -28,6 +28,10 @@ module Webpagetest
       end
     end
 
+    def ok?
+      raw.respond_to?(:statusCode) && raw.statusCode == 200
+    end
+
     # Gets the status of the request (code from Susuwatari gem)
     def get_status
       fetch_status unless status == :completed
