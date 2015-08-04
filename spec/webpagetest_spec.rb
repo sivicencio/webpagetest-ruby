@@ -26,8 +26,8 @@ describe Webpagetest do
     response.raw.statusCode.should be(200)
     response.test_id.should_not be(nil)
   end
-  
-  it 'should get the status of a test after being run' do    
+
+  it 'should get the status of a test after being run' do
     run_test_request
     response = wpt.run_test do |params|
       params.url = test_url
@@ -77,7 +77,7 @@ describe Webpagetest do
     status = response.get_status
     status.should be(:completed)
   end
-  
+
   it 'should get the result of a completed test using its id' do
     other_test_result_request
     response = wpt.test_result(test_id)
@@ -94,7 +94,7 @@ describe Webpagetest do
    it 'should get available locations' do
     locations_request
     locations = wpt.locations
-    locations.should be_instance_of Hashie::Mash 
+    locations.should be_instance_of Hashie::Mash
     locations.values.first.Label.should_not be_nil
   end
 
@@ -124,5 +124,32 @@ describe Webpagetest do
     locations.key?(:status_code).should be(true)
     locations.status_code.should be_a(Fixnum)
     locations.status_code.should_not be(200)
-  end 
+  end
+
+  describe 'API key' do
+
+    it 'should not raise if no API key is provided on custom instance' do
+      connection_options = {
+        request: :url_encoded,
+        response: :logger,
+        adapter: Faraday.default_adapter,
+        url: 'http://customwebpagetest.com/',
+      }
+      expect {
+        Webpagetest.new(options: connection_options)
+      }.to_not raise_error
+    end
+
+    it 'should raise if no API key is provided on webpagetest.org' do
+      connection_options = {
+        request: :url_encoded,
+        response: :logger,
+        adapter: Faraday.default_adapter,
+        url: Webpagetest::Connection::ENDPOINT,
+      }
+      expect {
+        Webpagetest.new(options: connection_options)
+      }.to raise_error(Webpagetest::Error)
+    end
+  end
 end

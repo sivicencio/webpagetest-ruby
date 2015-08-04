@@ -4,14 +4,32 @@ module Webpagetest
   # Custom response class for Webpagetest test data
   class Response
 
-    attr_reader :test_id, :status, :result, :raw
+    attr_reader :client, :test_id, :status, :result, :raw
 
     STATUS_BASE = 'testStatus.php'
     RESULT_BASE = 'jsonResult.php'
 
-    def initialize(raw_response, running=true)
+    def initialize(client, raw_response, running=true)
+      @client = client
       @raw = raw_response
-      @test_id = !running && raw_response.statusCode == 200 ? raw.data.id : raw.data.testId
+      # ap raw_response
+      if !running && raw_response.statusCode == 200
+        @test_id = raw.data.id
+      elsif raw.data
+        @test_id = raw.data.testId
+      else
+        # An error occurred, for example:
+        # {
+        #   "statusCode" => 400,
+        #   "statusText" => "Invalid Location, please try submitting your test request again."
+        # }
+        @test_id = nil
+        # When @test_id is nil, calling `get_status` will set @status to :error.
+      end
+    end
+
+    def ok?
+      raw.respond_to?(:statusCode) && raw.statusCode == 200
     end
 
     # Gets the status of the request (code from Susuwatari gem)
@@ -24,7 +42,7 @@ module Webpagetest
 
     # Makes the request to get the status of the test
     def fetch_status
-      connection = get_connection
+      connection = @client.connection
       response = connection.get do |req|
         req.url STATUS_BASE
         req.params['f'] = :json
@@ -40,13 +58,13 @@ module Webpagetest
         @status = :completed
         fetch_result
       when /4../
-        @current_status = :error
+        @status = :error
       end
     end
 
     # Makes the request to get the test result
     def fetch_result
-      connection = get_connection
+      connection = @client.connection
       response = connection.get do |req|
         req.url RESULT_BASE
         req.params['test'] = test_id
