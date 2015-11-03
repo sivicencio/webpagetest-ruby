@@ -14,7 +14,7 @@ module Webpagetest
       params = Hashie::Mash.new(params)
       required_params params
       params.f ||= :json
-      params.options ||= nil
+      params.options ||= {}
       @params = params
       @connection = get_connection params.options
     end
