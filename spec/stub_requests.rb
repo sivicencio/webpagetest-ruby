@@ -11,7 +11,26 @@ module StubRequests
 
   def run_test_request
     stub_request(:post, "http://www.webpagetest.org/runtest.php?k=#{KEY}&f=json&url=#{TEST_URL}&script=#{SCRIPT}").
-      with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Faraday v0.8.8'}).
+      with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Faraday v0.9.2'}).
+      to_return(:status => 200, :headers => {}, :body =>
+        { statusCode: 200,
+          statusText: "Ok",
+          data: {
+            testId: TEST_ID,
+            ownerKey: "341035eef08ff1cd5b9cbe215414060d486c7add",
+            jsonUrl: "http://www.webpagetest.org/jsonResult.php?test=131004_6T_3CX",
+            xmlUrl: "http://www.webpagetest.org/xmlResult/131004_6T_3CX/",
+            userUrl: "http://www.webpagetest.org/result/131004_6T_3CX/",
+            summaryCSV: "http://www.webpagetest.org/result/131004_6T_3CX/page_data.csv",
+            detailCSV: "http://www.webpagetest.org/result/131004_6T_3CX/requests.csv"
+          }
+        }.to_json
+      )
+  end
+
+  def run_private_test_request
+    stub_request(:post, "http://private.webpagetest.org/runtest.php?k=#{KEY}&f=json&url=#{TEST_URL}&script=#{SCRIPT}").
+      with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Faraday v0.9.2'}).
       to_return(:status => 200, :headers => {}, :body =>
         { statusCode: 200,
           statusText: "Ok",
@@ -31,56 +50,56 @@ module StubRequests
   # Status for test run not finished stub
   def test_status_running_request
     stub_request(:get, "http://www.webpagetest.org/testStatus.php?f=json&test=#{TEST_ID}").
-      with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Faraday v0.8.8'}).
+      with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Faraday v0.9.2'}).
       to_return(:status => 200, :headers => {}, :body => test_running_response(TEST_ID).to_json)
   end
 
   # Status for test run completed stub
   def test_status_completed_request
     stub_request(:get, "http://www.webpagetest.org/testStatus.php?f=json&test=#{TEST_ID}").
-      with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Faraday v0.8.8'}).
+      with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Faraday v0.9.2'}).
       to_return(:status => 200, :headers => {}, :body => test_completed_response(TEST_ID).to_json)
   end
 
   # Test result after completion stub
   def test_result_request
     stub_request(:get, "http://www.webpagetest.org/jsonResult.php?pagespeed=1&test=#{TEST_ID}").
-      with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Faraday v0.8.8'}).
+      with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Faraday v0.9.2'}).
       to_return(:status => 200, :headers => {}, :body => test_result_response(TEST_ID).to_json)
   end
 
   # Test result not finished stub
   def test_result_running_request
     stub_request(:get, "http://www.webpagetest.org/jsonResult.php?pagespeed=1&test=#{OTHER_TEST_ID}").
-      with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Faraday v0.8.8'}).
+      with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Faraday v0.9.2'}).
       to_return(:status => 200, :headers => {}, :body => test_running_response(OTHER_TEST_ID).to_json)
   end
 
   # Status for test result not finished stub
   def status_test_result_running_request
     stub_request(:get, "http://www.webpagetest.org/testStatus.php?f=json&test=#{OTHER_TEST_ID}").
-      with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Faraday v0.8.8'}).
+      with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Faraday v0.9.2'}).
       to_return(:status => 200, :headers => {}, :body => test_running_response(OTHER_TEST_ID).to_json)
   end
 
   # Status for test result completed stub
   def status_test_result_completed_request
     stub_request(:get, "http://www.webpagetest.org/testStatus.php?f=json&test=#{OTHER_TEST_ID}").
-      with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Faraday v0.8.8'}).
+      with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Faraday v0.9.2'}).
       to_return(:status => 200, :headers => {}, :body => test_completed_response(OTHER_TEST_ID).to_json)
   end
 
   # Other test result after completion stub
   def other_test_result_request
     stub_request(:get, "http://www.webpagetest.org/jsonResult.php?pagespeed=1&test=#{OTHER_TEST_ID}").
-      with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Faraday v0.8.8'}).
+      with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Faraday v0.9.2'}).
       to_return(:status => 200, :headers => {}, :body => test_result_response(OTHER_TEST_ID).to_json)
   end
 
   # Locations stub
   def locations_request
     stub_request(:get, "http://www.webpagetest.org/getLocations.php?f=json").
-      with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Faraday v0.8.8'}).
+      with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Faraday v0.9.2'}).
       to_return(:status => 200, :headers => {}, :body =>
         { statusCode: 200,
           statusText: "Ok",
@@ -90,7 +109,7 @@ module StubRequests
               location: "Dulles_IE6",
               Browser: "IE 6"
             }
-          } 
+          }
         }.to_json
       )
   end
@@ -178,7 +197,7 @@ module StubRequests
               render: 234,
               fullyLoaded: 1384,
               requests: [],
-              cached: 0,                  
+              cached: 0,
               domElements: 82,
               firstPaint: 235,
               SpeedIndexDT: 768,
@@ -212,7 +231,7 @@ module StubRequests
 
   def error_response(url)
     stub_request(:any, url).
-      with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Faraday v0.8.8'}).
+      with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Faraday v0.9.2'}).
       to_return(:status => 500, :headers => {}, :body => "")
   end
 
