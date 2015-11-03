@@ -9,8 +9,9 @@ module Webpagetest
       adapter: Faraday.default_adapter,
     }
 
-    def get_connection(options = nil)
-      options = Hashie::Mash.new(FARADAY_OPTIONS) if options.nil?
+    def get_connection(options = {})
+      options = FARADAY_OPTIONS.merge(options)
+      options = Hashie::Mash.new(options)
 
       url = options.url || ENDPOINT
 
