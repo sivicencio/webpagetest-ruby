@@ -2,7 +2,7 @@ module Webpagetest
   # Configures and performs connection requests
   module Connection
 
-    ENDPOINT = 'http://www.webpagetest.org/'
+    ENDPOINT = 'https://www.webpagetest.org/'
     FARADAY_OPTIONS = {
       request: :url_encoded,
       response: :logger,
